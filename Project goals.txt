@@ -1,0 +1,26 @@
+Super general goals:
+A UI program that houses a database with all the components that I have selected for use in PCBs.
+
+
+Needs:
+A relatively easily usable UI
+A screen where you can select catagories (such as resistors, capacitors, IC, misc., LEDs, etc.)
+A search bar for the whole database, irregardless of catagory
+A window to add new components to the database
+When clicking on "resistors" get a sorted list of all resistor values in the database (same for other catagories)
+When clicking on a specific value, get a list of different resistors in the database with that value (such as different sizes or specs)
+Have filters on the main list (such as size, wattage, tollerance, etc)
+have a button to add new resistor to the currently open value (same other catagories)
+Search by values (10nF, 0.7pH, etc), keyword(DC-DC, filter, etc), (or multiple)
+process different ways to write values; such as 0.1uF = 100nF, or 3.3kOhm = 3k3 Ohm
+
+
+Wants:
+link to APIs of digikey, mouser and/or octopart, to see pricing, availability, status, etc.
+Link to KiCad library, either show which standard part is the correct one, or link to the custom part I created (or not yet made).
+
+
+
+Would likes:
+Link to APIs of digikey, mouser, and/or octopart to fetch data on the components from manufactorers number, (or from website?)
+Some way to create BOM files. Import the component lists from KiCad somehow, and format them as I specify
