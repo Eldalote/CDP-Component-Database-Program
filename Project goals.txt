@@ -13,11 +13,13 @@ Have filters on the main list (such as size, wattage, tollerance, etc)
 have a button to add new resistor to the currently open value (same other catagories)
 Search by values (10nF, 0.7pH, etc), keyword(DC-DC, filter, etc), (or multiple)
 process different ways to write values; such as 0.1uF = 100nF, or 3.3kOhm = 3k3 Ohm
+an automated process for online backups and retreival. (git, or google drive, or something like that)
 
 
 Wants:
 link to APIs of digikey, mouser and/or octopart, to see pricing, availability, status, etc.
 Link to KiCad library, either show which standard part is the correct one, or link to the custom part I created (or not yet made).
+An intstaller that sets up everything (like backup location) right.
 
 
 
