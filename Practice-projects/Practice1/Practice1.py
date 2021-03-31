@@ -72,7 +72,8 @@ def print_all_resistors(conn):
 
 def show_all_resistors(conn, frame, itemlist):
     cur = conn.cursor()
-    cur.execute("SELECT * FROM resistors ORDER BY value ASC")
+    sql = "SELECT * FROM resistors ORDER BY "+str(2)+" ASC"
+    cur.execute(sql)
     rows = cur.fetchall()
     i= 0
     itemlist.clear()
@@ -144,10 +145,52 @@ class resistor_input:
         yoff = int(self.screensize[1]*0.3)
         geom = f'{x}x{y}+{xoff}+{yoff}'
         self.top.geometry(geom)
-        self.donebutton = Button(self.top, text = "done", command = self.hide).pack()
+        #name label and entry
+        self.name_l = Label(self.top, text="Resistor Value Short:", pady=10, padx =15).grid(row = 0, column = 0)
+        self.name_e = Entry(self.top, text="", width= 8)
+        self.name_e.grid(row = 1, column = 0)
+        #Value label and entry TODO: Make value automatic
+        self.value_l = Label(self.top, text="Resistor Value Long:", pady=10, padx =15).grid(row=0, column=1)
+        self.value_e = Entry(self.top, text="", width= 10)
+        self.value_e.grid(row=1, column=1)
+        #footprint label and entry
+        self.foot_l = Label(self.top, text="Footprint:", pady=10, padx =15).grid(row=0, column=2)
+        self.foot_e = Entry(self.top, text="", width= 6)
+        self.foot_e.grid(row=1, column=2)
+        #tollerance label and entry
+        self.toll_l = Label(self.top, text="Tollerance:", pady=10, padx =15).grid(row=0, column=3)
+        self.toll_e = Entry(self.top, text="", width= 5)
+        self.toll_e.grid(row=1, column=3)
+        #power rating label and entry
+        self.pr_l = Label(self.top, text="Power rating:", pady=10, padx =15).grid(row=0, column=4)
+        self.pr_e = Entry(self.top, text="", width= 5)
+        self.pr_e.grid(row=1, column=4)
+        #MfNr label and entry
+        self.MfNr_l = Label(self.top, text="Manufacturer Part Number:", pady=10, padx =15).grid(row=0, column=5)
+        self.MfNr_e = Entry(self.top, text="", width= 25)
+        self.MfNr_e.grid(row=1, column=5)
+
+        #spacer
+        self.spacer = Label(self.top, pady = 15).grid(row=2, column =0)
+        #buttons
+        self.add_b = Button(self.top, text="Add to Database", command= self.add_to_db).grid(row=3, column = 0, columnspan= 2)
+        self.add_close_b = Button(self.top, text="Add and close", command= self.add_and_close).grid(row=3, column =3, columnspan =2)
+        self.close_b = Button(self.top, text="Close", command=self.hide).grid(row=3, column=5, columnspan =2)
+
 
     def hide(self):
         self.top.withdraw()
+
+    def add_to_db(self):
+        name = self.name_e.get()
+        print(name)
+        resistor = (str(self.name_e.get()), int(self.value_e.get()), str(self.foot_e.get()), str(self.toll_e.get()), str(self.MfNr_e.get()), str(self.pr_e.get()) )
+        print(resistor)
+        add_resistor(self.conn, resistor)
+
+    def add_and_close(self):
+        self.add_to_db()
+        self.hide()
 
     
 
@@ -184,7 +227,7 @@ resistorFrame = LabelFrame(firstWindow, text= "Resistors", padx=10, pady=10)
 resistorFrame.grid(row=1, column=0, columnspan= 2)
 addresistorbutton = Button(firstWindow, text = "Add a resistor to database", command = input.display)
 addresistorbutton.grid(row = 0, column = 0)
-show_resistors_button = Button(firstWindow, text = "Show the resistors!", command= lambda: show_all_resistors(db_conn, resistorFrame, itemlist))
+show_resistors_button = Button(firstWindow, text = "Show the resistors! Ω", command= lambda: show_all_resistors(db_conn, resistorFrame, itemlist))
 show_resistors_button.grid(row = 0, column = 1)
 
 itemlist = []
@@ -199,5 +242,6 @@ clicklist= []
 firstWindow.mainloop()
 db_conn.commit()
 db_conn.close()
+print("this will happen")
 
 
