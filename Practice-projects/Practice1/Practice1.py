@@ -79,11 +79,18 @@ def show_all_resistors(conn, frame, itemlist):
     itemlist.clear()
     for row in rows:
         
-        itemlist.append(Button(frame, text= row[0], pady= 4, command=lambda value=row[1]: resistor_click(conn,value)).grid(row= i, column= 0))
-        itemlist.append(Label(frame, text=row[2], pady= 4).grid(row = i, column =1))
-        itemlist.append(Label(frame, text=row[3], pady= 4).grid(row = i, column =2))
-        itemlist.append(Label(frame, text=row[5], pady= 4).grid(row = i, column =3))
-        itemlist.append(Label(frame, text=row[4], pady= 4).grid(row = i, column =4))
+        
+        but1 = Button(frame, text= row[0], pady= 4, command=lambda value=row[1]: resistor_click(conn,value)).grid(row= i, column= 0)
+        lab1 = Label(frame, text=row[2], pady= 4).grid(row = i, column =1)
+        lab2 = Label(frame, text=row[3], pady= 4).grid(row = i, column =2)
+        lab3 = Label(frame, text=row[5], pady= 4).grid(row = i, column =3)
+        lab4 = Label(frame, text=row[4], pady= 4).grid(row = i, column =4)
+        
+        #itemlist.append(Button(frame, text= row[0], pady= 4, command=lambda value=row[1]: resistor_click(conn,value)).grid(row= i, column= 0))
+        #itemlist.append(Label(frame, text=row[2], pady= 4).grid(row = i, column =1))
+        #itemlist.append(Label(frame, text=row[3], pady= 4).grid(row = i, column =2))
+        #itemlist.append(Label(frame, text=row[5], pady= 4).grid(row = i, column =3))
+        #itemlist.append(Label(frame, text=row[4], pady= 4).grid(row = i, column =4))
 
         #namebut = Button(frame, text= row[0], pady= 4, command=lambda: resistor_click(conn, row[1]))
         #footlabel = Label(frame, text=row[2], pady= 4)

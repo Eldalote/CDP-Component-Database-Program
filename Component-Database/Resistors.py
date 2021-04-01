@@ -5,8 +5,7 @@ import db_handler
 class resistor_window:
     def __init__(self, screensize, db):
         self.screensize = screensize
-        self.db = db       
-        self.display_item_list = []
+        self.db = db
 
     def display_main(self):
         """Displays the window. Unhides it if it already exits, creates it if not."""
@@ -64,10 +63,7 @@ class resistor_window:
         return False
 
     def populate_resistor_list(self):
-        """Display the list of resistors Depending on the viewtype"""
-
-        #Clear the list
-        self.display_item_list.clear()
+        """Display the list of resistors Depending on the viewtype"""        
         #fetch all the resistors from the db
         rows = db.fetch_all_resistors()
         lastvalue = 0.0
@@ -76,7 +72,7 @@ class resistor_window:
                 if row[1] != lastvalue:
                     lastvalue = row[1]
                     shortvalue = 
-                    self.display_item_list.append(Button(self.res_main, text = shortvalue))
+                    ValueButton = Button(self.res_main, text = shortvalue)
 
         else:
             return False
