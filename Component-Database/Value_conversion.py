@@ -46,6 +46,7 @@ class ValueConvert:
                     multiplier = mult[5]
                     symbol = mult[1]
                     word = mult[0]
+                    exponent = mult[6]
                     break
             #if the value is larger than 1000 times the largest in the list, we didnt find a matching one in the list, and so we assign the largest now.
             if intvalue >= ValueConvert.iso_multipliers[len(ValueConvert.iso_multipliers)-1][5]:
@@ -59,14 +60,19 @@ class ValueConvert:
             #special case, if we are dealing with resistors in the "1 ohm" range, to get the right remainder, we need to multiply and divide by 1000 (remainder of 14.7/1 is 0.7, we need to get "7" as the answer in this case).
             if multiplier == 1:
                 remainder = int((intvalue*1000)%1000)
+
+            #if the remainder is too short  add leading zeroes (3090%1000 is 90, but we want 090)
+            insert = ""
+            while (len(str(remainder))+len(insert)) < exponent:
+                insert +="0"
             
             if remainder != 0:
                 #in a loop, we strip the trailing zeroes of the remainder
                 while remainder%10 == 0:
                     remainder = int(remainder / 10)
                 #and then formate the outputs correctly
-                shortvalue = first_part + symbol +str(remainder)
-                verbose = first_part + '.' + str(remainder) + " " + word +"Ohm"
+                shortvalue = first_part + symbol +insert + str(remainder)
+                verbose = first_part + '.' +insert+ str(remainder) + " " + word +"Ohm"
             else:
                 #if the remainder is 0, the formatting is simpler
                 shortvalue = first_part + symbol
@@ -176,10 +182,10 @@ class ValueConvert:
         else:
             realvalue = pre + post
         #Now add trailing zeroes, by checking if the length is shorter than the exponent + 1 ("1000" has exponent of 3, length of 4)
-        while len(realvalue) < (iso[6] +1):
+        while len(realvalue) < (iso[6] + len(pre)):
             realvalue += "0"
         #then add leading zeroes for database sorting perposes and return
-        while len(realvalue) < realvalue_store_width:
+        while len(realvalue) < self.realvalue_store_width:
             realvalue = "0" + realvalue 
         
         return (realvalue, verbose)
@@ -229,6 +235,6 @@ class ValueConvert:
         #this one is very simple. Just format it, and padd it with leading zeroes, and return.
         verbose = short + " Ohm"
         realvalue = short
-        while len(realvalue) < realvalue_store_width:
+        while len(realvalue) < self.realvalue_store_width:
             realvalue = "0" + realvalue    
         return (realvalue, verbose)

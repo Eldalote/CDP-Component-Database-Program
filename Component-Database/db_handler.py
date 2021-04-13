@@ -15,7 +15,7 @@ class component_database:
         conn = None
         try:
             conn = sqlite3.connect(self.db_path)
-            print(sqlite3.version)
+            #print(sqlite3.version)
         except Error as e:
             tkinter.messagebox.showerror("Database connection error", "Error message: " + str(e))   
         return conn
@@ -28,14 +28,14 @@ class component_database:
         """Create resistor table in database, if it does not already exist."""
         sql = """CREATE TABLE IF NOT EXISTS resistors ( 
                     MfNr text,
-                    value real,                                    
+                    value text,                                    
                     footprint text,
                     tolerance text,                                                                       
                     power_rating text,
                     manufacturer text,
                     composition text,
                     temperature_coef text,
-                    note_generic text
+                    note_generic text,
                     note_quality text,
                     note_price text,
                     note_own_stock
@@ -48,53 +48,68 @@ class component_database:
             tkinter.messagebox.showerror("Database table error", "Error message: " + str(e))
 
 
-        def add_resistor(self, resistor):
-            """Add new resistor entry to resistor table.
-            :param resistor: object with resistor data; MfNr, value, footprint, tolerance, power_rating, manufacturer, composition, temperature_coef, note_generic, note_quality, note price, note_own_stock
-            :return: last row id
-            """
-            sql = """INSERT INTO resistors(
-                        MfNr,
-                        value,
-                        footprint,
-                        tolerance,
-                        power_rating,
-                        manufacturer,
-                        composition,
-                        temperature_coef,
-                        note_generic,
-                        note_quality,
-                        note_price,
-                        note_own_stock)
-                        VALUES(?,?,?,?,?,?,?,?,?,?,?,?)"""
-            c = self.conn.cursor()
-            c.execute(sql, resistor)
-            self.conn.commit()
-            return c.lastrowid
+    def add_resistor(self, resistor):
+        """Add new resistor entry to resistor table.
+        :param resistor: object with resistor data; MfNr, value, footprint, tolerance, power_rating, manufacturer, composition, temperature_coef, note_generic, note_quality, note price, note_own_stock
+        :return: last row id
+        """
+        sql = """INSERT INTO resistors(
+                    MfNr,
+                    value,
+                    footprint,
+                    tolerance,
+                    power_rating,
+                    manufacturer,
+                    composition,
+                    temperature_coef,
+                    note_generic,
+                    note_quality,
+                    note_price,
+                    note_own_stock)
+                    VALUES(?,?,?,?,?,?,?,?,?,?,?,?)"""
+        c = self.conn.cursor()
+        c.execute(sql, resistor)
+        self.conn.commit()
+        return c.lastrowid
 
-        def fetch_all_resistors(self, sortcolumn, asc):
-            """Fetch all resistors in the table, sorted by sortcolumn, always secondarily sorted by footprint
-            :param asc: sort by ascending (true) or descending(false)
-            :return: list of rows
-            """
-            c = self.conn.cursor()
-            if asc == true:
-                sql = "SELECT * FROM resistors ORDER BY "+str(sortcolumn)+" ASC, footprint DESC;"
-            else:
-                sql = "SELECT * FROM resistors ORDER BY "+str(sortcolumn)+" DESC, footprint DESC;"
-            c.execute(sql)
-            rows = c.fetchall()
-            return rows
+    def fetch_all_resistors(self, sortcolumn, asc):
+        """Fetch all resistors in the table, sorted by sortcolumn, always secondarily sorted by footprint
+        :param asc: sort by ascending (true) or descending(false)
+        :return: list of rows
+        """
+        c = self.conn.cursor()
+        if asc == True:
+            sql = "SELECT * FROM resistors ORDER BY "+str(sortcolumn)+" ASC, footprint DESC;"
+        else:
+            sql = "SELECT * FROM resistors ORDER BY "+str(sortcolumn)+" DESC, footprint DESC;"
+        c.execute(sql)
+        rows = c.fetchall()
+        return rows
 
-        def fetch_resistors_by_value(self, value):
-            """Fetch all resistors with matching value
-            :param value: The resistor value to search by.
-            :return: rows, a list of rows with matching value.
-            """
-            c = self.conn.cursor()
-            c.execute("SELECT * FROM resistors WHERE value = ?",(value,))
-            rows = c.fetchall()
-            return rows
+    def fetch_resistors_by_value(self, value):
+        """Fetch all resistors with matching value
+        :param value: The resistor value to search by.
+        :return: rows, a list of rows with matching value.
+        """
+        c = self.conn.cursor()
+        c.execute("SELECT * FROM resistors WHERE value = ?",(value,))
+        rows = c.fetchall()
+        return rows
 
+    def check_footprint_exists_resistor(self, footprint):
+        """Checks whether the footprint is already present in database. Can be used to prevent typos
+        :param footprint: The footprint to be checked for
+        :return: 0 or 1
+        """
+        c = self.conn.cursor()
+        c.execute("SELECT EXISTS(SELECT 1 FROM resistors WHERE footprint = ? LIMIT 1)",(footprint,))
+        return c.fetchall()[0][0]
 
-
+    def check_manufacturer_exists_resistor(self, manufacturer):
+        """Checks whether the manufacturer is already present in database. Can be used to prevent typos
+        :param footprint: The manufacturer to be checked for
+        :return: 0 or 1
+        """
+        c = self.conn.cursor()
+        c.execute("SELECT EXISTS(SELECT 1 FROM resistors WHERE manufacturer = ? LIMIT 1)",(manufacturer,))
+        return c.fetchall()[0][0]
