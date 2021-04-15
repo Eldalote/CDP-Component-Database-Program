@@ -2,8 +2,9 @@ from tkinter import *
 import tkinter.messagebox
 import sqlite3
 from sqlite3 import Error
-import db_handler
-import Resistors
+from Subs.db_handler import component_database
+from Subs.Resistor_window import Resistor_window
+
 
 
 def get_screen_size():
@@ -25,17 +26,17 @@ def main():
     screensize = get_screen_size()
 
     #create database object
-    db = db_handler.component_database(r"db/components.db")
+    db = component_database(r"db/components.db")
 
     #create the resistor window object
-    resistor_window = Resistors.resistor_window(screensize, db)
+    resistor_window = Resistor_window(db, screensize, [100, 50])
 
     #build the main window
     mainWindow = Tk()
     mainWindow.geometry(f'{300}x{300}+{int(screensize[0]*0.4)}+{int(screensize[1]*0.4)}')
 
     #add the Resistor button
-    resistor_button = Button(mainWindow, text= "Resistors", command=resistor_window.display_main)
+    resistor_button = Button(mainWindow, text= "Resistors", command=resistor_window.display)
     resistor_button.grid(row=0, column=0)
 
     #main windown main loop
@@ -44,6 +45,9 @@ def main():
     #Stuff to do when closing program
     #close db connection
     db.close()
+
+    #debug_delete
+    print("This has happened")
 
 
 if __name__ == "__main__":

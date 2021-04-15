@@ -1,7 +1,24 @@
+"""
+Outdated! use Resistor_window.py instead.
+
+
+"""
+
+
+
+
+
+
+
+
+
+
+
+
 from tkinter import * 
 import tkinter.messagebox
-import db_handler
-from Value_conversion import ValueConvert
+import Subs.db_handler as db_handler
+from Subs.Value_conversion import ValueConvert
 
 class resistor_window:
     def __init__(self, screensize, db):
@@ -55,8 +72,8 @@ class resistor_window:
         labelspacer = Label(self.res_main, text="", width =50).grid(row=0, column =1)
 
         #View type selection radiobuttons
-        self.radio_main_view_simple = Radiobutton(self.res_main, text="Simple list view", variable=self.main_viewstyle, value="Simple")
-        self.radio_main_view_full = Radiobutton(self.res_main, text="Full list view", variable=self.main_viewstyle, value="Full")
+        self.radio_main_view_simple = Radiobutton(self.res_main, text="Simple list view", variable=self.main_viewstyle, value="Simple", command = self.__populate_resistor_list)
+        self.radio_main_view_full = Radiobutton(self.res_main, text="Full list view", variable=self.main_viewstyle, value="Full", command = self.__populate_resistor_list)
         self.radio_main_view_simple.grid(row=0, column = 2, sticky = W)
         self.radio_main_view_full.grid(row=1, column = 2, sticky = W)
 
@@ -73,14 +90,13 @@ class resistor_window:
     def __populate_resistor_list(self):
         """Display the list of resistors Depending on the viewtype"""   
         #clear the old list of display items
+        for item in self.resistor_listing_list:
+            item.destroy()
         self.resistor_listing_list.clear()
         #fetch all the resistors from the db
         rows = self.db.fetch_all_resistors("value", True)
         print(rows)
-        #place spacers in the labelframe for better look
-        self.resistor_listing_list.append(Label(self.list_frame, text= "", width = 20).grid(row = 0, column = 0))
-        self.resistor_listing_list.append(Label(self.list_frame, text= "", width = 15).grid(row = 0, column = 1))
-        self.resistor_listing_list.append(Label(self.list_frame, text= "", width = 50).grid(row = 0, column = 2))
+        
         #starting values
         lastvalue = ""
         duplicates = 0
@@ -89,6 +105,13 @@ class resistor_window:
         converter = ValueConvert()
         #the simple view
         if self.main_viewstyle.get() == "Simple":
+            #place spacers in the labelframe for better look
+            self.resistor_listing_list.append(Label(self.list_frame, text= "", width = 20))
+            self.resistor_listing_list[-1].grid(row = 0, column = 0)
+            self.resistor_listing_list.append(Label(self.list_frame, text= "", width = 15))
+            self.resistor_listing_list[-1].grid(row = 0, column = 1)
+            self.resistor_listing_list.append(Label(self.list_frame, text= "", width = 50))
+            self.resistor_listing_list[-1].grid(row = 0, column = 2)
             #step through resistors from the database
             for row in rows:
                 #if it is a new value, create an entry
@@ -98,14 +121,16 @@ class resistor_window:
                         duptext = str(duplicates) + " Type"
                         if duplicates > 1:
                             duptext += "s"
-                        self.resistor_listing_list.append(Label(self.list_frame, text = duptext).grid(row = gridplace -1, column = 1))
+                        self.resistor_listing_list.append(Label(self.list_frame, text = duptext))
+                        self.resistor_listing_list[-1].grid(row = gridplace -1, column = 1)
                     #This is the first of this value
                     duplicates = 1
                     #remember for comparison with next resistor
                     lastvalue = row[1]
                     shortvalue = converter.real_to_short_resistor(row[1])
                     #TODO add function for actually clicking the button
-                    self.resistor_listing_list.append(Button(self.list_frame, text = shortvalue[0], width = 15).grid(row = gridplace, column = 0))
+                    self.resistor_listing_list.append(Button(self.list_frame, text = shortvalue[0], width = 15))
+                    self.resistor_listing_list[-1].grid(row = gridplace, column = 0)
                     gridplace += 1
                 else:
                     #if it is the same value, add one
@@ -116,10 +141,53 @@ class resistor_window:
                 duptext = str(duplicates) + " Type"
                 if duplicates > 1:
                     duptext += "s"
-                self.resistor_listing_list.append(Label(self.list_frame, text = duptext).grid(row = gridplace -1, column = 1))
+                self.resistor_listing_list.append(Label(self.list_frame, text = duptext))
+                self.resistor_listing_list[-1].grid(row = gridplace -1, column = 1)
         else:
-            print(self.main_viewstyle)
-            return False
+            #Discription labels
+            self.resistor_listing_list.append(Label(self.list_frame, text = "Value", width = 15))
+            self.resistor_listing_list[-1].grid(row = gridplace, column = 0)
+            self.resistor_listing_list.append(Label(self.list_frame, text = "Footprint", width = 15))
+            self.resistor_listing_list[-1].grid(row = gridplace, column = 1)
+            self.resistor_listing_list.append(Label(self.list_frame, text = "Tolerance", width = 15))
+            self.resistor_listing_list[-1].grid(row = gridplace, column = 2)
+            self.resistor_listing_list.append(Label(self.list_frame, text = "Power rating", width = 15))
+            self.resistor_listing_list[-1].grid(row = gridplace, column = 3)
+            self.resistor_listing_list.append(Label(self.list_frame, text = "Manufacturer", width = 15))
+            self.resistor_listing_list[-1].grid(row = gridplace, column = 4)
+            self.resistor_listing_list.append(Label(self.list_frame, text = "MfNr", width = 15))
+            self.resistor_listing_list[-1].grid(row = gridplace, column = 5)
+            gridplace += 1
+            #spacing label
+            self.resistor_listing_list.append(Label(self.list_frame, text = "", width = 15))
+            self.resistor_listing_list[-1].grid(row = gridplace, column = 0)
+            gridplace += 1
+
+            #step through the resistors in the database
+            for row in rows:
+                #get value representation
+                shortvalue = converter.real_to_short_resistor(row[1])
+                #TODO add function for clicking the button
+                #Value button
+                self.resistor_listing_list.append(Button(self.list_frame, text = shortvalue[0], width = 15))
+                self.resistor_listing_list[-1].grid(row = gridplace, column = 0)
+                #footprint label
+                self.resistor_listing_list.append(Label(self.list_frame, text = row[2], width = 15))
+                self.resistor_listing_list[-1].grid(row = gridplace, column = 1)
+                #Tolerance label
+                self.resistor_listing_list.append(Label(self.list_frame, text = row[3], width = 15))
+                self.resistor_listing_list[-1].grid(row = gridplace, column = 2)
+                #power rating label
+                self.resistor_listing_list.append(Label(self.list_frame, text = row[4], width = 15))
+                self.resistor_listing_list[-1].grid(row = gridplace, column = 3)
+                #manufacturer label
+                self.resistor_listing_list.append(Label(self.list_frame, text = row[5], width = 20))
+                self.resistor_listing_list[-1].grid(row = gridplace, column = 4)
+                #MfNr button
+                #TODO function for clipboard stuff with this button
+                self.resistor_listing_list.append(Button(self.list_frame, text = row[0], width = 25))
+                self.resistor_listing_list[-1].grid(row = gridplace, column = 5)
+                gridplace += 1
 
 
     def __display_add_new(self):

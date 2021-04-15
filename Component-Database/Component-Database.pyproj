@@ -22,11 +22,40 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Component_Database.py" />
-    <Compile Include="db_handler.py" />
-    <Compile Include="Resistors.py" />
-    <Compile Include="Value_conversion.py">
+    <Compile Include="Subs\Add_passive_window.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Subs\component_category.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Subs\Component_single_window.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Subs\db_handler.py" />
+    <Compile Include="Subs\passive_components.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Subs\Outdated\Resistors.py" />
+    <Compile Include="Subs\Passive_single_window.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Subs\Resistor_window.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Subs\Subwindow.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Subs\Value_conversion.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Subs\" />
+    <Folder Include="Subs\Outdated\" />
+    <Folder Include="Subs\__pycache__\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Subs\__pycache__\db_handler.cpython-39.pyc" />
+    <Content Include="Subs\__pycache__\Resistors.cpython-39.pyc" />
+    <Content Include="Subs\__pycache__\Value_conversion.cpython-39.pyc" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
