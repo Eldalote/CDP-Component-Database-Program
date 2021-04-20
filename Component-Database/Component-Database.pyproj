@@ -25,6 +25,12 @@
     <Compile Include="Subs\Add_passive_window.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Subs\Edit_passive_window.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Subs\Resistor_singles_windows.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Subs\component_category.py">
       <SubType>Code</SubType>
     </Compile>
@@ -32,6 +38,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Subs\db_handler.py" />
+    <Compile Include="Subs\Inspect_passive_window.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Subs\passive_components.py">
       <SubType>Code</SubType>
     </Compile>

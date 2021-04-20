@@ -32,7 +32,7 @@ class component_category(Subwindow):
 
         #setup viewstype and place radiobuttons
         self.viewStyle = StringVar()
-        self.viewStyle.set("Simple")
+        self.viewStyle.set("Full")
         self.radio_view_simple = Radiobutton(self.window, text = "Simple list view", variable = self.viewStyle, value = "Simple", command = self._populate_component_list)
         self.radio_view_full   = Radiobutton(self.window, text = "Full list view", variable = self.viewStyle, value = "Full", command = self._populate_component_list)
         self.radio_view_simple.grid(row = self.gridrow, column = 2, sticky = W, columnspan = 6)
@@ -157,3 +157,6 @@ class component_category(Subwindow):
 
 
 
+    def _open_edit_window(self, row):
+        """Override!"""
+        print("Override failure _open_edit_window")

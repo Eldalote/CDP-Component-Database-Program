@@ -11,7 +11,7 @@ class Component_single_window(Subwindow):
         :param screensize: tuple with screensize in pixels
         """
         self.screensize = screensize
-        x = int(screensize[0]*0.3)
+        x = int(screensize[0]*0.25)
         y = int(screensize[1]*0.3) 
         geometry = [x,y,window_position[0], window_position[1]]
         super().__init__(db_handler, geometry)

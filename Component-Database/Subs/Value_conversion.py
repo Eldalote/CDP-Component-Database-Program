@@ -21,9 +21,10 @@ class ValueConvert:
         :return: the correct conversion function
         """
         if type == "Resistor":
-            self.real_to_short_resistor(realvalue)
+            return self.real_to_short_resistor(realvalue)
         else:
             print("Not yet implemented, or code error")
+            return (-1,-1)
     
     def real_to_short_resistor(self, RealValue):
         """Converts the presented RealValue to short notation for the user, and the verbose value
@@ -144,9 +145,10 @@ class ValueConvert:
         :return: the correct function for the conversion
         """
         if type == "Resistor":
-            self.short_to_real_resistor(ShortRepresentation)
+            return self.short_to_real_resistor(ShortRepresentation)
         else:
-            print("Not yet implemented or code error")
+            print("Not yet implemented or code error(type = " + type + ")")
+            return (-1,-1)
 
     def short_to_real_resistor(self, ShortRepresentation):
         """Converts the presented ShortRepresentation to a string containing the real value for storage in the database, as well ass a verbose representation
@@ -208,8 +210,14 @@ class ValueConvert:
         while len(realvalue) < (iso[6] + len(pre)):
             realvalue += "0"
         #then add leading zeroes for database sorting perposes and return
-        while len(realvalue) < self.realvalue_store_width:
-            realvalue = "0" + realvalue 
+        if post == "":
+            while len(realvalue) < self.realvalue_store_width:
+                realvalue = "0" + realvalue 
+        else:
+            #if there is a post part, don't count the . and the post part in the length (for sorting reasons)
+             while len(realvalue) < self.realvalue_store_width + 1 + len(post):
+                realvalue = "0" + realvalue 
+        
         
         return (realvalue, verbose)
 

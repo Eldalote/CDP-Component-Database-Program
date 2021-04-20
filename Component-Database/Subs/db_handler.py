@@ -6,8 +6,7 @@ from sqlite3 import Error
 class component_database:
     def __init__(self, db_path):
         self.db_path = db_path
-        self.conn = self.open_connection()
-        self.create_resistor_table()
+        self.conn = self.open_connection()        
 
     def open_connection(self):
         """Create a database connection to a SQLite database        
@@ -25,9 +24,45 @@ class component_database:
         """Close database connection."""
         self.conn.close()
 
-    def create_resistor_table(self):
+    def add_to_table(self, table, component):
+        """generic function to add a component to a table. Redirects to correct function"""
+        nextKey = self._get_next_key(table)
+        component.append(nextKey)
+        if table == "Resistor":
+            return self._add_resistor(component)
+        else: 
+            print("ERROR: Not yet implemented or wrong type")
+            return -1
+
+    def create_table_if_new(self, table):
+        """Generic function to create a table in the database, if it does not exist yet. Redirects to correct function"""
+        if table == "Resistor":
+            return self._create_resistor_table()
+        else:
+            print("ERROR: Not yet implemented, or typo: " + table )
+
+
+    def edit_entry_in_table(self, table, key, new_entry):
+        """Generic function to edit an entry in a table
+        effectively deletes the entry, and adds a new one in its place
+        :param table: db table this affects
+        :param key: key of the entry to "edit" (is deleted)
+        :param new_entry: new component object (must be without key)
+        """
+        self.delete_entry_in_table(table, key)
+        self.add_to_table(table, new_entry)
+
+
+    def delete_entry_in_table(self, table, key):
+        """Generic function to delete an entry from a table"""
+        c = self.conn.cursor()
+        sql = "DELETE FROM " + table + " WHERE Key = " + str(key)
+        c.execute(sql)
+
+
+    def _create_resistor_table(self):
         """Create resistor table in database, if it does not already exist."""
-        sql = """CREATE TABLE IF NOT EXISTS resistors ( 
+        sql = """CREATE TABLE IF NOT EXISTS Resistor ( 
                     Value text,
                     Footprint text,                                    
                     Tolerance text,
@@ -39,7 +74,9 @@ class component_database:
                     Note_generic text,
                     Note_quality text,
                     Note_price text,
-                    Note_own_stock
+                    Note_own_stock text,
+                    KiCad_footprint text,
+                    Key integer
                     );"""
         try:
             c = self.conn.cursor()
@@ -49,12 +86,12 @@ class component_database:
             tkinter.messagebox.showerror("Database table error", "Error message: " + str(e))
 
 
-    def add_resistor(self, resistor):
+    def _add_resistor(self, resistor):
         """Add new resistor entry to resistor table.
         :param resistor: object with resistor data; value, footprint, tolerance, power_rating, material, manufacturer, MfNr, temperature_coef, note_generic, note_quality, note price, note_own_stock
         :return: last row id
         """
-        sql = """INSERT INTO resistors(
+        sql = """INSERT INTO Resistor(
                     Value,
                     Footprint,
                     Tolerance,
@@ -66,8 +103,10 @@ class component_database:
                     Note_generic,
                     Note_quality,
                     Note_price,
-                    Note_own_stock)
-                    VALUES(?,?,?,?,?,?,?,?,?,?,?,?)"""
+                    Note_own_stock,
+                    KiCad_footprint,
+                    Key)
+                    VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)"""
         c = self.conn.cursor()
         c.execute(sql, resistor)
         self.conn.commit()
@@ -76,8 +115,8 @@ class component_database:
 
     def fetch_all_components_type(self, table, sortcolumn, asc):
         """Fetch all components from a table, sorted by sortcolumn, always secondarily sorted by footprint
-        :param table: name of the table (ex: 'resistors')
-        :param sortcolumn: name of the column to sort by (ex: "value")
+        :param table: name of the table (ex: 'Resistor')
+        :param sortcolumn: name of the column to sort by (ex: "Value")
         :param asc: sort by ascending (true) or descending(false)
         :return: list of rows
         """
@@ -90,24 +129,37 @@ class component_database:
         rows = c.fetchall()
         return rows
 
-    def fetch_component_by_value(self,table, value):
+    def fetch_component_by_value(self,table, valuetype, value):
         """Fetch all components in the table with matching value
-        :param table: name of the table to search in (ex: 'resistors')
+        :param table: name of the table to search in (ex: 'Resistor')
+        :param valuetype: the column to search in (ex: "Footprint"
         :param value: The resistor value to search by.
         :return: rows, a list of rows with matching value.
         """
         c = self.conn.cursor()
-        c.execute("SELECT * FROM "+str(table)+" WHERE Value = ?",(value,))
+        c.execute("SELECT * FROM "+str(table)+" WHERE "+str(valuetype)+" = ?",(value,))
         rows = c.fetchall()
         return rows
 
     def check_item_exists_in_table(self, table, itemtype, item):
         """Checks whether a specific item is already present in the table. Can be used to prevent typos
-        :param table: name of the table to search in (ex: 'resistors')
-        :param itemtype: name of the column to search in (ex: Footprints)
+        :param table: name of the table to search in (ex: 'Resistor')
+        :param itemtype: name of the column to search in (ex: Footprint)
         :return: 0 or 1
         """
         c = self.conn.cursor()
-        c.execute("SELECT EXISTS(SELECT 1 FROM "+str(table)+" WHERE "+str(itemtype)+" = ? LIMIT 1)",(footprint,))
+        c.execute("SELECT EXISTS(SELECT 1 FROM "+str(table)+" WHERE "+str(itemtype)+" = ? LIMIT 1)",(item,))
         return c.fetchall()[0][0]
 
+    def _get_next_key(self, table):
+        """returns highest index in the table +1"""
+        c = self.conn.cursor()
+        sql = "Select MAX(Key) from " + table
+        c.execute(sql)
+        MaxKey = c.fetchall()
+        print(MaxKey)
+        print(MaxKey[0][0])
+        if MaxKey[0][0] == None:
+            return 1
+        else:
+            return MaxKey[0][0] + 1
