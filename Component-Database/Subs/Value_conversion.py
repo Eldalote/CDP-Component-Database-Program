@@ -10,8 +10,27 @@ class ValueConvert:
                        ('Kilo',  'k','k','k','k', 1000, 3),
                        ('Mega',  'M','M','M','M', 1000000, 6),
                        ('Giga',  'G','G','G','G', 1000000000, 9))
-    #How wide should the real value be for storage (for sorting reasons)
+    #How wide should the database value be for storage (for sorting reasons)
+    db_store_width = 20
     realvalue_store_width = 20
+
+
+    def db_to_display(self, type, db_value):
+        """Function to turn a database stored value into a easily readable representation
+        :param type: Type of component (ex. 'Resistor' or 'Capacitor')
+        :param db_value: Value from the database to be tranformed
+        :return: Tuple with (short representation, verbose representation)
+        """
+
+
+    def readable_to_db(self, type, readable_value):
+        """Function to turn a readably typed value into a database storable representation (mostly for sorting reasons)
+        :param type: Type of component (ex. 'Resistor' or 'Capacitor')
+        :param readable_value: Readable representation of the value, to be transformed (string)
+        :return: Database storable value. (string)
+        """
+
+
 
     def real_to_short(self, type, realvalue):
         """Converts the presented RealValue to short notation for the user, and the verbose value
@@ -210,11 +229,11 @@ class ValueConvert:
         while len(realvalue) < (iso[6] + len(pre)):
             realvalue += "0"
         #then add leading zeroes for database sorting perposes and return
-        if post == "":
+        if post == "" or iso[0] != "":
             while len(realvalue) < self.realvalue_store_width:
                 realvalue = "0" + realvalue 
         else:
-            #if there is a post part, don't count the . and the post part in the length (for sorting reasons)
+            #if there is a post part on 1 ohm range, don't count the . and the post part in the length (for sorting reasons)
              while len(realvalue) < self.realvalue_store_width + 1 + len(post):
                 realvalue = "0" + realvalue 
         
