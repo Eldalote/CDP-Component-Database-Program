@@ -54,7 +54,10 @@
     <Compile Include="Subs\Subwindow.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Subs\Value_conversion.py" />
+    <Compile Include="Subs\Outdated\Value_conversion.py" />
+    <Compile Include="Subs\ValueConvert.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Subs\" />

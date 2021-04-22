@@ -13,23 +13,7 @@ class ValueConvert:
     #How wide should the database value be for storage (for sorting reasons)
     db_store_width = 20
     realvalue_store_width = 20
-
-
-    def db_to_display(self, type, db_value):
-        """Function to turn a database stored value into a easily readable representation
-        :param type: Type of component (ex. 'Resistor' or 'Capacitor')
-        :param db_value: Value from the database to be tranformed
-        :return: Tuple with (short representation, verbose representation)
-        """
-
-
-    def readable_to_db(self, type, readable_value):
-        """Function to turn a readably typed value into a database storable representation (mostly for sorting reasons)
-        :param type: Type of component (ex. 'Resistor' or 'Capacitor')
-        :param readable_value: Readable representation of the value, to be transformed (string)
-        :return: Database storable value. (string)
-        """
-
+    
 
 
     def real_to_short(self, type, realvalue):
