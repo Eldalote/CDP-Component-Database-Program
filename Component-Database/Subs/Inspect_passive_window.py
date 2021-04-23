@@ -1,7 +1,7 @@
 from tkinter import *
 from Subs.Passive_single_window import Passive_single_window
 from Subs.db_handler import component_database
-from Subs.Value_conversion import ValueConvert
+from Subs.ValueConvert import ValueConvert
 import tkinter.messagebox
 
 
@@ -85,7 +85,7 @@ class Inspect_passive_window(Passive_single_window):
         """
         #get the converter for value
         convert = ValueConvert()
-        value = convert.real_to_short(self.PassiveType, row[0])
+        value, verbose = convert.db_to_readable(self.PassiveType, row[0])
         self.ValueDict['Value'].set(value[0])
         #just fill the rest
         self.ValueDict['Footprint'].set(row[1])

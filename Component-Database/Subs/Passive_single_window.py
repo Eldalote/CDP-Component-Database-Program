@@ -1,6 +1,6 @@
 from tkinter import *
 from Subs.Component_single_window import Component_single_window
-from Subs.Value_conversion import ValueConvert
+from Subs.ValueConvert import ValueConvert
 
 class Passive_single_window(Component_single_window):
     """Base class for the single component windows for the passive components"""
@@ -91,5 +91,5 @@ class Passive_single_window(Component_single_window):
         #instantiate value converter
         convert = ValueConvert()
         #convert with correct type
-        converted = convert.short_to_real(self.PassiveType, value)
-        self.ValueVerbose.set(converted[1])
+        verbose = convert.short_to_verbose(self.PassiveType, value)
+        self.ValueVerbose.set(verbose)

@@ -2,7 +2,7 @@ from tkinter import *
 from Subs.Passive_single_window import Passive_single_window
 from Subs.Add_passive_window import Add_passive_window
 from Subs.db_handler import component_database
-from Subs.Value_conversion import ValueConvert
+from Subs.ValueConvert import ValueConvert
 import tkinter.messagebox
 
 class Edit_passive_window(Add_passive_window):
@@ -30,7 +30,7 @@ class Edit_passive_window(Add_passive_window):
         #instantiate value converter
         convert = ValueConvert()
         #get database storage value and add to the component object
-        value = convert.short_to_real(self.PassiveType, self.ValueDict['Value'].get())
+        value = convert.short_to_db(self.PassiveType, self.ValueDict['Value'].get())
         component.append(value[0])
 
         #fill the rest of the component
@@ -80,7 +80,7 @@ class Edit_passive_window(Add_passive_window):
         """
         #get the converter for value
         convert = ValueConvert()
-        value = convert.real_to_short(self.PassiveType, row[0])
+        value, verbose = convert.db_to_readable(self.PassiveType, row[0])
         self.ValueDict['Value'].set(value[0])
         #just fill the rest
         self.ValueDict['Footprint'].set(row[1])

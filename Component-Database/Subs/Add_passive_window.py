@@ -1,7 +1,7 @@
 from tkinter import *
 from Subs.Passive_single_window import Passive_single_window
 from Subs.db_handler import component_database
-from Subs.Value_conversion import ValueConvert
+from Subs.ValueConvert import ValueConvert
 import tkinter.messagebox
 
 
@@ -145,7 +145,7 @@ class Add_passive_window(Passive_single_window):
         #instantiate value converter
         convert = ValueConvert()
         #get database storage value and add to the component object
-        value = convert.short_to_real(self.PassiveType, self.ValueDict['Value'].get())
+        value = convert.short_to_db(self.PassiveType, self.ValueDict['Value'].get())
         component.append(value[0])
 
         #fill the rest of the component

@@ -1,7 +1,7 @@
 from tkinter import *
 from Subs.passive_components import passive_components
 from Subs.db_handler import component_database
-from Subs.Value_conversion import ValueConvert
+from Subs.ValueConvert import ValueConvert
 from Subs.Resistor_singles_windows import *
 
 class Resistor_window(passive_components):
@@ -33,8 +33,8 @@ class Resistor_window(passive_components):
         convert = ValueConvert()
         db_value = db_row[0]
         #convert the value
-        convvalue = convert.real_to_short("Resistor", db_value)
-        return (db_value, convvalue[0], convvalue[1])
+        short, verbose = convert.db_to_readable("Resistor", db_value)
+        return (db_value, short, verbose)
 
     def _button_add_new_component(self):
         self.add_window.display()

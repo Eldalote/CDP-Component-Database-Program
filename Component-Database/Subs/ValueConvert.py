@@ -55,6 +55,10 @@ class ValueConvert():
         Pre = split[0]
         Post = split[1]
 
+        #it could be that the number was not only zeroes, but still resolved to nothing. (ex: 0. or 000.)
+        if Pre == "" and Post == "":
+            return "0", "", 0
+
         #if Pre is blank (if it was only 0's, the 0's were stripped) we are dealing with a number smaller than 1
         if Pre == "":
             Exponent = -1
@@ -63,6 +67,9 @@ class ValueConvert():
             while tempPost[0] == "0":
                 #for every leading zero, decrease the exponent by one.
                 Exponent -= 1
+                if tempPost == "0":
+                    #this also means only zeroes
+                    return "0", "", 0
                 tempPost = tempPost[1:len(tempPost)]
         #if Pre is not blank, the exponent is the length of Pre -1
         else:
@@ -79,10 +86,6 @@ class ValueConvert():
 
         #return the values
         return Pre, Post, Exponent
-
-
-    def short_to_verbose(self, type, short_value):
-        pass
 
     def short_to_db(self, type, short_value):
         """Turns the short_value input into a value that can be stored in the database
@@ -188,3 +191,73 @@ class ValueConvert():
         :param db_value: string with value from the database.
         :return: String, string. Short representation of the database value, verbose representation of the database value
         """
+        #start by checking if the db value is an error. The database should never have an error value in it, but short to verbose also uses this function, and that might pass an error value
+        if db_value[0:5] == "ERROR":
+            #if the error is that the input is empty, just pass two empty strings
+            if db_value == "ERROR: Empty":
+                return "",""
+            else:
+                #else pass an empty string for short value, and the error message for the verbose
+                return "", db_value
+
+        #not an error, split the db value with the split function
+        pre, post, exp = self._split_number(db_value)
+        #step through the isos to see which multiplier matches.
+        for iso in self.iso_multipliers:
+            if exp >= iso[4]:
+                mult = iso
+                #this always picks the biggest multiplier that fits
+        #if the exponent is less than 0, we need to strip leading zeroes of the post
+        if exp < 0:
+            while post[0] == "0":
+                post = post[1:len(post)]
+
+        #then, depending on whether the length of pre is longer or shorter than the desired length, either shift parts to or from post
+        #too long:
+        while len(pre) > 1 + exp - mult[4]:
+            if pre[-1] != "0" or post != "": #as long as the last digit of pre is not a zero, or post isn't empty, shift the last digit from pre to post
+                post = pre[-1] + post
+            #remove the last digit from pre, either if it has been shifted, or its a 0 and post is empty
+            pre = pre[0:-1]
+        #too short
+        while len(pre) < 1 + exp -mult[4]:
+            if post == "": #if post is already empty, just add a 0 to the end of pre
+                pre += "0"
+            else: #if not, shift the first digit of post to the end of pre
+                pre += post[0]
+                post = post[1:len(post)]
+        #both short and verbose representation start with pre
+        short = pre
+        verbose = pre
+        #now finish verbose:
+        if post != "":
+            verbose += "." + post
+        verbose += " " + mult[0] + self.component_units[type]
+        #then finish short
+        if type == "Resistor":
+            short += mult[1] + post #resistors are simple. This one works with all values
+        else:
+            #none resistors need different formatting depending on if the post is empty or not
+            if post != "":
+                if mult[0] == "":
+                    short += "." + post + self.component_symbols[type]
+                else:
+                    short += "." + post + mult[2] + self.component_symbols[type]
+            else:
+                if mult[0] == "":
+                    short += self.component_symbols[type]
+                else:
+                    short += mult[2] + self.component_symbols[type]
+        #we're done, return short and verbose
+        return short, verbose
+
+    def short_to_verbose(self, type, short_value):
+        """Turns a short representation value into a verbose representation, for readability
+        :param type: String. Type of component (possible types are listed in component units and component symbols)
+        :param short_value: string. Short representation value as input
+        :return: String. Verbose representation of the short input
+        """
+        #we pull a sneaky. We already have a short to db function, and a function that takes db value and returns a verbose representation. Just use a combination of the two
+        db = self.short_to_db(type, short_value)
+        short, verbose = self.db_to_readable(type, db)
+        return verbose
