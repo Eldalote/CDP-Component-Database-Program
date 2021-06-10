@@ -41,6 +41,7 @@ class Edit_passive_window(Add_passive_window):
         component.append(self.ValueDict['Manufacturer'].get())
         component.append(self.ValueDict['MfNr'].get())
         component.append(self.ValueDict['Temperature Coef'].get())
+        component.append(self.ValueDict['Datasheet'].get())
         component.append(self.ValueDict['Note Generic'].get())
         component.append(self.ValueDict['Note Quality'].get())
         component.append(self.ValueDict['Note Price'].get())
@@ -81,7 +82,7 @@ class Edit_passive_window(Add_passive_window):
         #get the converter for value
         convert = ValueConvert()
         value, verbose = convert.db_to_readable(self.PassiveType, row[0])
-        self.ValueDict['Value'].set(value[0])
+        self.ValueDict['Value'].set(value)
         #just fill the rest
         self.ValueDict['Footprint'].set(row[1])
         self.ValueDict['Tolerance'].set(row[2])
@@ -90,11 +91,12 @@ class Edit_passive_window(Add_passive_window):
         self.ValueDict['Manufacturer'].set(row[5])
         self.ValueDict['MfNr'].set(row[6])
         self.ValueDict['Temperature Coef'].set(row[7])
-        self.ValueDict['Note Generic'].set(row[8])
-        self.ValueDict['Note Quality'].set(row[9])
-        self.ValueDict['Note Price'].set(row[10])
-        self.ValueDict['Note Stock'].set(row[11])
-        self.ValueDict['KiCad Footprint'].set(row[12])
+        self.ValueDict['MinMaxTemperature'].set(row[8])
+        self.ValueDict['Datasheet'].set(row[9])
+        self.ValueDict['Note Generic'].set(row[10])
+        self.ValueDict['Note Quality'].set(row[11])
+        self.ValueDict['Note Price'].set(row[12])
+        self.ValueDict['Note Stock'].set(row[13])        
         self.key = row[-1]
 
         #debug delete

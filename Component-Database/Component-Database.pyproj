@@ -28,6 +28,9 @@
     <Compile Include="Subs\Edit_passive_window.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Subs\OctoPartAPI.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Subs\Resistor_singles_windows.py">
       <SubType>Code</SubType>
     </Compile>

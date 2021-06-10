@@ -98,6 +98,8 @@ class ValueConvert():
             pass
         else:
             return "ERROR: Incorrect type"
+        #remove blank spaces
+        short_value = short_value.replace(" ","")
         #check if the input has anything in it
         if short_value == "":
             return "ERROR: Empty"
@@ -111,9 +113,7 @@ class ValueConvert():
             pre, post, exp = self._split_number(short_value)
         else:
             #If not just a number, check if it is a number with a multiplier in there somewhere. Keep note of if that is successful
-            success = False
-            #remove blank spaces
-            short_value = short_value.replace(" ","")
+            success = False           
             #step through the iso multipliers to look for the multiplier symbol
             for iso in self.iso_multipliers:
                 #first, check if we get a number if we replace the multiplier symbol with a period. (ex: 4k7 gets 4.7 with "k")

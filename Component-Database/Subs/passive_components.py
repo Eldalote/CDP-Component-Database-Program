@@ -1,5 +1,7 @@
 from tkinter import *
 from Subs.component_category import component_category
+from Subs.ValueConvert import ValueConvert
+import pyperclip
 
 class passive_components(component_category):
     """Base class for the passive components windows, child of component category
@@ -7,17 +9,12 @@ class passive_components(component_category):
 
     def __init__(self, db_handler, screensize, window_position):
         super().__init__(db_handler, screensize, window_position)
-
-
-    def _get_power_table_discriptor(self):
-        print("Override failure _get_power_table_discriptor(passive_components)")        
+            
 
     def _populate_component_list_full(self, rows):
         """Function to populate the component list full list view, override of parent function"""
         
-        #first, get table discriptors
-        discriptor = self._get_power_table_discriptor()
-
+       
         #start framerow at 0
         framerow = 0
 
@@ -32,7 +29,7 @@ class passive_components(component_category):
         self.component_item_list.append(Label(self.list_frame, text = "Tolerance", width = 15))
         self.component_item_list[-1].grid(row = framerow, column = 2)
         #power rating / max voltage / nominal current
-        self.component_item_list.append(Label(self.list_frame, text = discriptor, width = 15))
+        self.component_item_list.append(Label(self.list_frame, text = self.Power_Rating_name, width = 15))
         self.component_item_list[-1].grid(row = framerow, column = 3)
         #leave room for max dc resistance (inductor only) / temperature coef code (caps)
         self.component_item_list.append(Label(self.list_frame, text = "", width = 0))
@@ -55,9 +52,10 @@ class passive_components(component_category):
         #step through components
         for row in rows:
             #get value representation
-            value = self._get_value(row)
+            convert = ValueConvert()
+            short, verbose = convert.db_to_readable(self.Component_type, row[0])
             #value button
-            self.component_item_list.append(Button(self.list_frame, text = value[1], width =15, command = lambda row = row: self._button_component_specific(row)))
+            self.component_item_list.append(Button(self.list_frame, text = short, width =15, command = lambda row = row: self.inspect_window.display(row)))
             self.component_item_list[-1].grid(row = framerow, column = 0)
             #footprint label
             self.component_item_list.append(Label(self.list_frame, text = row[1], width = 15))
@@ -78,7 +76,7 @@ class passive_components(component_category):
             self.component_item_list.append(Label(self.list_frame, text = row[5], width = 15))
             self.component_item_list[-1].grid(row = framerow, column = 6)
             #MfNr button
-            self.component_item_list.append(Button(self.list_frame, text = row[6], width =15, command = lambda MfNr = row[6]: self._button_MfNr(MfNr)))
+            self.component_item_list.append(Button(self.list_frame, text = row[6], width =15, command = lambda MfNr = row[6]: pyperclip.copy(MfNr)))
             self.component_item_list[-1].grid(row = framerow, column = 7)
             #increment framerow
             framerow +=1

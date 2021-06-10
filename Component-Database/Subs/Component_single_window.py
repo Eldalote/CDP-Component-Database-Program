@@ -27,9 +27,10 @@ class Component_single_window(Subwindow):
         #create a value dictionary with info all components have. to be added to by component type
         self.ValueDict = {"MfNr": StringVar(),
                           "Footprint": StringVar(),
-                          "KiCad Footprint": StringVar(),
+                          "MinMaxTemperature": StringVar(),
                           "Manufacturer": StringVar(),
                           "Note Generic": StringVar(),
                           "Note Quality": StringVar(),
                           "Note Price": StringVar(),
-                          "Note Stock": StringVar()}
+                          "Note Stock": StringVar(),
+                          "Datasheet": StringVar()}

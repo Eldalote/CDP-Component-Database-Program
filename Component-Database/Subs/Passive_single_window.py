@@ -9,6 +9,8 @@ class Passive_single_window(Component_single_window):
         super().__init__(db_handler, screensize, window_position)
         self.PassiveType = "ERROR"
         self.Power_Rating_name = "ERROR"
+        self.Value_Name = "ERROR"
+        self.Material_Name = "ERROR"
 
     def _create_window(self):
         """Create window function, override of parent
@@ -56,7 +58,7 @@ class Passive_single_window(Component_single_window):
         self.max_dc_row = self.gridrow
         self.gridrow += 1
         #Material
-        Label(self.window, text = "Material", width = 25, anchor = 'w').grid(row = self.gridrow, column = 0)
+        Label(self.window, text = self.Material_Name, width = 25, anchor = 'w').grid(row = self.gridrow, column = 0)
         self.gridrow += 1
         #Manufacturer
         Label(self.window, text = "Manufacturer", width = 25, anchor = 'w').grid(row = self.gridrow, column = 0)
@@ -64,11 +66,14 @@ class Passive_single_window(Component_single_window):
         #Temp coef
         Label(self.window, text = "Temperature coefficient", width = 25, anchor = 'w').grid(row = self.gridrow, column = 0)
         self.gridrow += 1
+        #MinMax temp
+        Label(self.window, text = "Min-Max Temperature", width = 25, anchor = 'w').grid(row = self.gridrow, column = 0)
+        self.gridrow += 1
         #ESR label
         self.ESR_row = self.gridrow
         self.gridrow += 1
-        #Kicad foot
-        Label(self.window, text = "KiCad Footprint", width = 25, anchor = 'w').grid(row = self.gridrow, column = 0)
+        #Datasheet url
+        Label(self.window, text = "Datasheet URL", width = 25, anchor = 'w').grid(row = self.gridrow, column = 0)
         self.gridrow += 1
         #note generic
         Label(self.window, text = "Generic Note", width = 25, anchor = 'w').grid(row = self.gridrow, column = 0)

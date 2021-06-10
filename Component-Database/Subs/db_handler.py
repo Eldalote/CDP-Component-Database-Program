@@ -71,11 +71,12 @@ class component_database:
                     Manufacturer text,
                     MfNr text,
                     Temperature_coef text,
+                    MinMaxTemperature text,
+                    Datasheet_URL text,
                     Note_generic text,
                     Note_quality text,
                     Note_price text,
-                    Note_own_stock text,
-                    KiCad_footprint text,
+                    Note_own_stock text,                    
                     Key integer
                     );"""
         try:
@@ -88,7 +89,7 @@ class component_database:
 
     def _add_resistor(self, resistor):
         """Add new resistor entry to resistor table.
-        :param resistor: object with resistor data; value, footprint, tolerance, power_rating, material, manufacturer, MfNr, temperature_coef, note_generic, note_quality, note price, note_own_stock
+        :param resistor: object with resistor data; value, footprint, tolerance, power_rating, material, manufacturer, MfNr, temperature_coef, MinMaxTemperature, datasheet url, note_generic, note_quality, note price, note_own_stock
         :return: last row id
         """
         sql = """INSERT INTO Resistor(
@@ -100,13 +101,14 @@ class component_database:
                     Manufacturer,
                     MfNr,
                     Temperature_coef,
+                    MinMaxTemperature,
+                    Datasheet_URL,
                     Note_generic,
                     Note_quality,
                     Note_price,
-                    Note_own_stock,
-                    KiCad_footprint,
+                    Note_own_stock,                    
                     Key)
-                    VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)"""
+                    VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"""
         c = self.conn.cursor()
         c.execute(sql, resistor)
         self.conn.commit()

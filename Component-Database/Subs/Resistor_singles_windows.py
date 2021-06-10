@@ -13,6 +13,14 @@ class Add_resistor_window(Add_passive_window):
         super().__init__(db_handler, screensize, window_position, master_window)
         self.PassiveType = "Resistor"
         self.Power_Rating_name = "Power Rating"
+        self.Value_Name = "Resistance"
+        self.Material_Name = "Composition"
+
+    def _button_octopart(self, event=None):
+        super()._button_octopart(event=event)
+
+        
+
 
 
 class Inspect_resistor_window(Inspect_passive_window):
@@ -21,6 +29,8 @@ class Inspect_resistor_window(Inspect_passive_window):
         super().__init__(db_handler, screensize, window_position, master)
         self.PassiveType = "Resistor"
         self.Power_Rating_name = "Power Rating"
+        self.Value_Name = "Resistance"
+        self.Material_Name = "Composition"
 
 
 
@@ -30,3 +40,5 @@ class Edit_resistor_window(Edit_passive_window):
         super().__init__(db_handler, screensize, window_position, master_window)
         self.PassiveType = "Resistor"
         self.Power_Rating_name = "Power Rating"
+        self.Value_Name = "Resistance"
+        self.Material_Name = "Composition"

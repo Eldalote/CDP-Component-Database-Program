@@ -51,10 +51,13 @@ class Inspect_passive_window(Passive_single_window):
         #temp coef
         Label(self.window, textvariable = self.ValueDict['Temperature Coef'], width = 25, anchor = 'w').grid(row = self.gridrow, column = 1)
         self.gridrow += 1
-        #space for ESR
+        #minmaxtemp
+        Label(self.window, textvariable = self.ValueDict['MinMaxTemperature'], width = 25, anchor = 'w').grid(row = self.gridrow, column = 1)
         self.gridrow += 1
-        #KiCad foot
-        Label(self.window, textvariable = self.ValueDict['KiCad Footprint'], width = 25, anchor = 'w').grid(row = self.gridrow, column = 1)
+        #space for ESR
+        self.gridrow += 1      
+        #Datasheet TODO make it a button
+        Label(self.window, textvariable = self.ValueDict['Datasheet'], width = 25, anchor = 'w').grid(row = self.gridrow, column = 1)
         self.gridrow += 1
         #note generic
         Label(self.window, textvariable = self.ValueDict['Note Generic'], width = 25, anchor = 'w').grid(row = self.gridrow, column = 1)
@@ -86,7 +89,7 @@ class Inspect_passive_window(Passive_single_window):
         #get the converter for value
         convert = ValueConvert()
         value, verbose = convert.db_to_readable(self.PassiveType, row[0])
-        self.ValueDict['Value'].set(value[0])
+        self.ValueDict['Value'].set(value)
         #just fill the rest
         self.ValueDict['Footprint'].set(row[1])
         self.ValueDict['Tolerance'].set(row[2])
@@ -95,11 +98,13 @@ class Inspect_passive_window(Passive_single_window):
         self.ValueDict['Manufacturer'].set(row[5])
         self.ValueDict['MfNr'].set(row[6])
         self.ValueDict['Temperature Coef'].set(row[7])
-        self.ValueDict['Note Generic'].set(row[8])
-        self.ValueDict['Note Quality'].set(row[9])
-        self.ValueDict['Note Price'].set(row[10])
-        self.ValueDict['Note Stock'].set(row[11])
-        self.ValueDict['KiCad Footprint'].set(row[12])
+        self.ValueDict['MinMaxTemperature'].set(row[8])
+        self.ValueDict['Datasheet'].set(row[9])
+        self.ValueDict['Note Generic'].set(row[10])
+        self.ValueDict['Note Quality'].set(row[11])
+        self.ValueDict['Note Price'].set(row[12])
+        self.ValueDict['Note Stock'].set(row[13])
+        
 
     def display(self, row):
         super().display()

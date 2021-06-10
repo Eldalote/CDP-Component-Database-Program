@@ -1,5 +1,6 @@
 from tkinter import *
 from Subs.Subwindow import Subwindow
+from Subs.ValueConvert import ValueConvert
 
 class component_category(Subwindow):
     """Base class for all component category windows, child of subwindow"""
@@ -14,6 +15,11 @@ class component_category(Subwindow):
         y = int(screensize[1]*0.5) 
         geometry = [x,y,window_position[0], window_position[1]]
         super().__init__(db_handler, geometry)
+        self.Component_type = "ERROR"
+        self.Power_Rating_name = "ERROR"
+        self.add_window = None
+        self.inspect_window = None
+        self.edit_window = None       
 
     def _create_window(self):
         """Create window function, override of parent
@@ -24,7 +30,7 @@ class component_category(Subwindow):
         #then we finish the construction
 
         #place the add new component button
-        self.button_add_new_component = Button(self.window, text = "Add new", width = 25, height = 5, command = self._button_add_new_component)
+        self.button_add_new_component = Button(self.window, text = "Add new", width = 25, height = 5, command = self.add_window.display)
         self.button_add_new_component.grid(row = self.gridrow, column = 0, rowspan = 2)
 
         #place spacer for looks
@@ -53,34 +59,8 @@ class component_category(Subwindow):
         self._populate_component_list()
         
 
-
-    def _button_add_new_component(self):
-        """Function called when add new component button is pressed"""
-        print("Override failure _button_add_new_component(component_category)")
-        
-
-    def _fetch_all_components(self):
-        """Function to override, fetch all components"""
-        print("Override failure _fetch_all_components(component_category)")
-        
-
-    def _get_value(self, db_row):
-        """Function to override, get the display value from the db_row
-        :return: [stored db value, display value, verbose value]"""
-        print("Override failure _get_value(component_category)")
-        
-
     def _button_component_value(self, value):
-        """Funtion called when component value button is clicked in list, override"""
-        print("Override failure _button_component_value(component_category)")     
-    
-    def _button_component_specific(self, row):
-        """Funtion called when a specific component button is clicked in list, override"""
-        print("Override failure _button_component_specific(component_category)")     
-
-    def _button_MfNr(self, MfNr):
-        """Funtion called when a MfNr button is clicked in list, override"""
-        print("Override failure _button_MfNr(component_category)")     
+        pass
         
 
     def _populate_component_list(self):
@@ -92,7 +72,7 @@ class component_category(Subwindow):
         self.component_item_list.clear()
         
         #fetch all components
-        rows = self._fetch_all_components()
+        rows = self.db.fetch_all_components_type(self.Component_type, "Value", True)
 
         #Debug_delete
         for row in rows:
@@ -114,11 +94,12 @@ class component_category(Subwindow):
             self.component_item_list[-1].grid(row = framerow, column = 2)
 
             #step through the components from the db, and create listing
+            convert = ValueConvert()            
             for row in rows:
                 #get value
-                value = self._get_value(row)
+                short, verbose = convert.db_to_readable(self.Component_type, row[0])
                 #if the value is not the same as last time, create an entry
-                if value[0] != lastvalue:
+                if row[0] != lastvalue:
                     #this is a new value, so first we start with listing how many entries the last value had (if any)
                     if duplicates != 0:
                         duptext = str(duplicates) + " Type"
@@ -130,9 +111,9 @@ class component_category(Subwindow):
                     #this is the first of the value, so duplicates =1
                     duplicates = 1
                     #remember value for next row comparisson
-                    lastvalue = value[0]
+                    lastvalue = row[0]
                     #add component value button
-                    self.component_item_list.append(Button(self.list_frame, text = value[1], width = 15, command = lambda value = value[0]: self._button_component_value(value)))
+                    self.component_item_list.append(Button(self.list_frame, text = short, width = 15, command = lambda value = row[0]: self._button_component_value(value)))
                     self.component_item_list[-1].grid(row = framerow, column = 0)
 
                 else:
@@ -154,9 +135,3 @@ class component_category(Subwindow):
     def _populate_component_list_full(self):
         """Function for polulating the more complex full component list, to be overridden"""
         print("Override failure _populate_component_list_full(component_category)")        
-
-
-
-    def _open_edit_window(self, row):
-        """Override!"""
-        print("Override failure _open_edit_window")
