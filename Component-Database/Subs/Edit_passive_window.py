@@ -4,6 +4,7 @@ from Subs.Add_passive_window import Add_passive_window
 from Subs.db_handler import component_database
 from Subs.ValueConvert import ValueConvert
 import tkinter.messagebox
+from icecream import ic
 
 class Edit_passive_window(Add_passive_window):
     """Base class for the 'Edit' window for passive components, builds on the add window"""
@@ -51,8 +52,8 @@ class Edit_passive_window(Add_passive_window):
         #call function from child, to add specific functionality
         self._add_specific()
 
-        #debug delete
-        print(component)
+        #debug 
+        ic(component)
 
         #check if the data meets the minimum required entries
         if component[0] == "ERROR" or component[1] == "" or component[6] == "":
@@ -100,4 +101,4 @@ class Edit_passive_window(Add_passive_window):
         self.key = row[-1]
 
         #debug delete
-        print(self.key)
+        ic(self.key)

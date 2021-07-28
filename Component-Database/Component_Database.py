@@ -4,6 +4,7 @@ import sqlite3
 from sqlite3 import Error
 from Subs.db_handler import component_database
 from Subs.Resistor_window import Resistor_window
+from icecream import ic
 
 
 
@@ -47,7 +48,7 @@ def main():
     db.close()
 
     #debug_delete
-    print("This has happened")
+    ic("This has happened")
 
 
 if __name__ == "__main__":

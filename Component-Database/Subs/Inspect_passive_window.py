@@ -3,6 +3,9 @@ from Subs.Passive_single_window import Passive_single_window
 from Subs.db_handler import component_database
 from Subs.ValueConvert import ValueConvert
 import tkinter.messagebox
+from icecream import ic
+import webbrowser
+
 
 
 class Inspect_passive_window(Passive_single_window):
@@ -57,7 +60,9 @@ class Inspect_passive_window(Passive_single_window):
         #space for ESR
         self.gridrow += 1      
         #Datasheet TODO make it a button
-        Label(self.window, textvariable = self.ValueDict['Datasheet'], width = 25, anchor = 'w').grid(row = self.gridrow, column = 1)
+        DatasheetLabel = Label(self.window, textvariable = self.ValueDict['Datasheet'], width = 25, anchor = 'w')
+        DatasheetLabel.grid(row = self.gridrow, column = 1)
+        DatasheetLabel.bind("<Button-1>", lambda e, url = self.ValueDict['Datasheet']:self._open_db_URL(url))
         self.gridrow += 1
         #note generic
         Label(self.window, textvariable = self.ValueDict['Note Generic'], width = 25, anchor = 'w').grid(row = self.gridrow, column = 1)
@@ -112,5 +117,9 @@ class Inspect_passive_window(Passive_single_window):
         self.row = row
 
     def _edit_entry(self):
-        self.master._open_edit_window(self.row)
+        self.master.edit_window.display(self.row)
         self._hide()
+
+    def _open_db_URL(self, url):
+        ic(url.get())
+        webbrowser.open(url.get())

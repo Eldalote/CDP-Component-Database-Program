@@ -2,6 +2,7 @@ from tkinter import *
 import tkinter.messagebox
 import sqlite3
 from sqlite3 import Error
+from icecream import ic
 
 class component_database:
     def __init__(self, db_path):
@@ -15,7 +16,6 @@ class component_database:
         conn = None
         try:
             conn = sqlite3.connect(self.db_path)
-            #print(sqlite3.version)
         except Error as e:
             tkinter.messagebox.showerror("Database connection error", "Error message: " + str(e))   
         return conn
@@ -159,8 +159,8 @@ class component_database:
         sql = "Select MAX(Key) from " + table
         c.execute(sql)
         MaxKey = c.fetchall()
-        print(MaxKey)
-        print(MaxKey[0][0])
+        ic(MaxKey)
+        ic(MaxKey[0][0])
         if MaxKey[0][0] == None:
             return 1
         else:

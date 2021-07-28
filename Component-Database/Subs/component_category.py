@@ -1,6 +1,7 @@
 from tkinter import *
 from Subs.Subwindow import Subwindow
 from Subs.ValueConvert import ValueConvert
+from icecream import ic
 
 class component_category(Subwindow):
     """Base class for all component category windows, child of subwindow"""
@@ -74,9 +75,8 @@ class component_category(Subwindow):
         #fetch all components
         rows = self.db.fetch_all_components_type(self.Component_type, "Value", True)
 
-        #Debug_delete
-        for row in rows:
-            print(row)
+        #Debug
+        ic(rows)
 
         #the simple list viewstyle:
         if self.viewStyle.get() == "Simple":

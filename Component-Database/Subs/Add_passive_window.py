@@ -5,6 +5,8 @@ from Subs.ValueConvert import ValueConvert
 from Subs.OctoPartAPI import OctoPartAPI
 import tkinter.messagebox
 import pyperclip
+from icecream import ic
+
 
 
 class Add_passive_window(Passive_single_window):
@@ -178,8 +180,8 @@ class Add_passive_window(Passive_single_window):
         #call function from child, to add specific functionality
         self._add_specific()
 
-        #debug delete
-        print(component)
+        #debug
+        ic(component)
 
         #check if the data meets the minimum required entries
         if component[0] == "ERROR" or component[1] == "" or component[6] == "":
@@ -217,7 +219,7 @@ class Add_passive_window(Passive_single_window):
         """Function to override, result of octopart button click"""        
         #get mfnr
         MfNr = self.ValueDict['MfNr'].get()
-        print(MfNr)
+        ic(MfNr)
         #if the button is pressed with an empty mfnr, do nothing
         if MfNr == "":
             return
@@ -225,7 +227,7 @@ class Add_passive_window(Passive_single_window):
         #start the api, and get the data matching the mfnr
         api = OctoPartAPI()
         octoData = api.search_by_mfnr(MfNr)
-        print(octoData)
+        ic(octoData)
         #check if the right value is returned (Resistance, Capacitance, etc.) else pop up an error, and do not fill
         if self.Value_Name in octoData:
             self.ValueDict['Value'].set(octoData[self.Value_Name])
