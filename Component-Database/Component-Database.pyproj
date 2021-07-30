@@ -54,6 +54,12 @@
     <Compile Include="Subs\Resistor_window.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Subs\Short_list_passives.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Subs\Short_list_window.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Subs\Subwindow.py">
       <SubType>Code</SubType>
     </Compile>

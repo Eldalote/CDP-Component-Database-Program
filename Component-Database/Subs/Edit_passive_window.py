@@ -32,7 +32,7 @@ class Edit_passive_window(Add_passive_window):
         convert = ValueConvert()
         #get database storage value and add to the component object
         value = convert.short_to_db(self.PassiveType, self.ValueDict['Value'].get())
-        component.append(value[0])
+        component.append(value)
 
         #fill the rest of the component
         component.append(self.ValueDict['Footprint'].get())
@@ -42,12 +42,13 @@ class Edit_passive_window(Add_passive_window):
         component.append(self.ValueDict['Manufacturer'].get())
         component.append(self.ValueDict['MfNr'].get())
         component.append(self.ValueDict['Temperature Coef'].get())
+        component.append(self.ValueDict['MinMaxTemperature'].get())
         component.append(self.ValueDict['Datasheet'].get())
         component.append(self.ValueDict['Note Generic'].get())
         component.append(self.ValueDict['Note Quality'].get())
         component.append(self.ValueDict['Note Price'].get())
         component.append(self.ValueDict['Note Stock'].get())
-        component.append(self.ValueDict['KiCad Footprint'].get())
+        
 
         #call function from child, to add specific functionality
         self._add_specific()

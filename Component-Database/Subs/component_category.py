@@ -61,7 +61,7 @@ class component_category(Subwindow):
         
 
     def _button_component_value(self, value):
-        pass
+        ic()
         
 
     def _populate_component_list(self):

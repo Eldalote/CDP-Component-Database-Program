@@ -18,7 +18,6 @@ an automated process for online backups and retreival. (git, or google drive, or
 
 Wants:
 link to APIs of digikey, mouser and/or octopart, to see pricing, availability, status, etc.
-Link to KiCad library, either show which standard part is the correct one, or link to the custom part I created (or not yet made).
 An intstaller that sets up everything (like backup location) right.
 
 
