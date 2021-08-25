@@ -4,6 +4,7 @@ from Subs.Add_passive_window import Add_passive_window
 from Subs.db_handler import component_database
 from Subs.ValueConvert import ValueConvert
 import tkinter.messagebox
+from tkinter.messagebox import askyesno
 from icecream import ic
 
 class Edit_passive_window(Add_passive_window):
@@ -16,12 +17,11 @@ class Edit_passive_window(Add_passive_window):
         #first we start by calling parent function
         super()._create_window()
 
-        #first, delete the add button, and add_close button
-        self.button_add.destroy()
-        self.button_add_close.destroy()
+        #relabel the buttons
+        self.button_add["text"] = "Edit"
+        self.button_add_close["text"] = "Delete Entry"
 
-        #add an "Edit" button
-        Button(self.window, width = 20, text = "Edit", command = self._button_add).grid(row = self.gridrow, column = 0)
+        
 
     def _button_add(self, event=None):
         """Override of the add function, does edit instead of add"""
@@ -70,8 +70,16 @@ class Edit_passive_window(Add_passive_window):
         self._hide()
 
     def _button_add_close(self, event=None):
-        """Override of the add close function (for keybind reasons) does nothing"""
-        pass
+        """Override of the add close function, to use as "delete entry" button"""
+        sure = askyesno(title = "Confirmation", message = "Are you sure you want to delete this entry from the database?")
+        if sure:
+            self.db.delete_entry_in_table(self.PassiveType, self.key)
+            self._clean_entries()
+            self.master_window._populate_component_list()
+            self._hide()
+        self.master_window.display()
+        if sure == False:
+            self.window.deiconify()
 
     def display(self, row):
         super().display()

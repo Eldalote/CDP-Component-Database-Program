@@ -58,6 +58,7 @@ class component_database:
         c = self.conn.cursor()
         sql = "DELETE FROM " + table + " WHERE Key = " + str(key)
         c.execute(sql)
+        self.conn.commit()
 
 
     def _create_resistor_table(self):
@@ -165,3 +166,18 @@ class component_database:
             return 1
         else:
             return MaxKey[0][0] + 1
+
+    def find_duplicates(self, table):
+        c = self.conn.cursor()
+        sql = "Select MfNr, COUNT(*) c FROM " + str(table) + " GROUP BY MfNr HAVING c >1"
+        c.execute(sql)
+        duplicates = c.fetchall()
+        ic(duplicates)
+        for duplicate in duplicates:
+            rows = self.fetch_component_by_value(table, "MfNr", duplicate[0])
+            ic(rows)
+            ic(rows[0][0:-1])
+            if rows[0][0:-1] == rows[1][0:-1]:
+                self.delete_entry_in_table(table, rows[1][-1])
+            else:
+                pass

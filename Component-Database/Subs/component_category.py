@@ -71,12 +71,12 @@ class component_category(Subwindow):
         for item in self.component_item_list:
             item.destroy()
         self.component_item_list.clear()
+
+        #Check for duplicates in the table
+        self.db.find_duplicates(self.Component_type)
         
         #fetch all components
         rows = self.db.fetch_all_components_type(self.Component_type, "Value", True)
-
-        #Debug
-        ic(rows)
 
         #the simple list viewstyle:
         if self.viewStyle.get() == "Simple":

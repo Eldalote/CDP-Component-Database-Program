@@ -3,6 +3,7 @@ from Subs.Passive_single_window import Passive_single_window
 from Subs.db_handler import component_database
 from Subs.ValueConvert import ValueConvert
 import tkinter.messagebox
+from tkinter.messagebox import askyesno
 from icecream import ic
 import webbrowser
 
@@ -83,6 +84,10 @@ class Inspect_passive_window(Passive_single_window):
         #edit button
         Button(self.window, text = "Edit", command = self._edit_entry).grid(row= self.gridrow, column =1)
 
+        #delete entry button
+        Button(self.window, text = "Delete entry", command = self._delete_entry).grid(row = self.gridrow, column = 2)
+            
+
         #bind keys
         self.window.bind("<Return>", self._hide)
         self.window.bind("<F3>", self._hide)
@@ -109,6 +114,7 @@ class Inspect_passive_window(Passive_single_window):
         self.ValueDict['Note Quality'].set(row[11])
         self.ValueDict['Note Price'].set(row[12])
         self.ValueDict['Note Stock'].set(row[13])
+        self.key = row[-1]
         
 
     def display(self, row):
@@ -119,6 +125,16 @@ class Inspect_passive_window(Passive_single_window):
     def _edit_entry(self):
         self.master.edit_window.display(self.row)
         self._hide()
+
+    def _delete_entry(self):
+        sure = askyesno(title = "Confirmation", message = "Are you sure you want to delete this entry from the database?")
+        if sure:
+            self.db.delete_entry_in_table(self.PassiveType, self.key)            
+            self.master._populate_component_list()
+            self._hide()
+        self.master.display()
+        if sure == False:
+            self.window.deiconify()
 
     def _open_db_URL(self, url):
         ic(url.get())
