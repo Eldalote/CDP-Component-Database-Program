@@ -60,6 +60,9 @@ class Edit_passive_window(Add_passive_window):
         if component[0] == "ERROR" or component[1] == "" or component[6] == "":
             tkinter.messagebox.showerror("Error with data", "Incomplete or incorrect data. MfNr, Value and Footprint are the minimum required data")
             return
+        if self.db.fetch_component_by_value(self.PassiveType, "MfNr", self.ValueDict['MfNr'].get())[0][-1] != self.key or len(self.db.fetch_component_by_value(self.PassiveType, "MfNr", self.ValueDict['MfNr'].get())) > 1:
+            tkinter.messagebox.showerror("Duplicate error", "That manufacturer number is already present in the database.")
+            return
 
         #if the minimum is met, eddit to database
         self.db.edit_entry_in_table(self.PassiveType, self.key, component)

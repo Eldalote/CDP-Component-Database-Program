@@ -187,6 +187,9 @@ class Add_passive_window(Passive_single_window):
         if component[0] == "ERROR" or component[1] == "" or component[6] == "":
             tkinter.messagebox.showerror("Error with data", "Incomplete or incorrect data. MfNr, Value and Footprint are the minimum required data")
             return
+        if self.db.fetch_component_by_value(self.PassiveType, "MfNr", self.ValueDict['MfNr'].get()):
+            tkinter.messagebox.showerror("Duplicate error", "That manufacturer number is already present in the database.")
+            return
 
         #if the minimum is met, add to database
         self.db.add_to_table(self.PassiveType, component)

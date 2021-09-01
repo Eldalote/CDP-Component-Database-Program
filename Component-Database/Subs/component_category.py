@@ -21,6 +21,10 @@ class component_category(Subwindow):
         self.add_window = None
         self.inspect_window = None
         self.edit_window = None       
+        self.SortList = []
+        self.SortText = {}
+        self.SortLast = True
+
 
     def _create_window(self):
         """Create window function, override of parent
@@ -29,6 +33,10 @@ class component_category(Subwindow):
         #first we start by calling parent function
         super()._create_window()
         #then we finish the construction
+
+        self.SortText.update({"Footprint": StringVar(),
+                         "Manufacturer": StringVar(),
+                         "MfNr": StringVar()})
 
         #place the add new component button
         self.button_add_new_component = Button(self.window, text = "Add new", width = 25, height = 5, command = self.add_window.display)
@@ -76,7 +84,8 @@ class component_category(Subwindow):
         self.db.find_duplicates(self.Component_type)
         
         #fetch all components
-        rows = self.db.fetch_all_components_type(self.Component_type, "Value", True)
+        #rows = self.db.fetch_all_components_type(self.Component_type, "Value", True)
+        rows = self.db.fetch_components_type_multisorted(self.Component_type, self.SortList)
 
         #the simple list viewstyle:
         if self.viewStyle.get() == "Simple":
@@ -135,3 +144,35 @@ class component_category(Subwindow):
     def _populate_component_list_full(self):
         """Function for polulating the more complex full component list, to be overridden"""
         print("Override failure _populate_component_list_full(component_category)")        
+
+    def _update_sortbutton_text(self):
+        for text in self.SortText:
+            self.SortText[text].set("")
+        for i, sort in enumerate(self.SortList):
+            if sort[1]:
+                self.SortText[sort[0]].set(str(i)+"↑")
+            else:
+                self.SortText[sort[0]].set(str(i)+"↓")
+        for text in self.SortText:
+            if self.SortText[text].get() == "":
+                self.SortText[text].set("↕")
+
+    def _button_sort_click(self, sorttype):
+        newsort = [sorttype, True]
+
+        for i, sort in enumerate(self.SortList):
+            if sort[0] == sorttype:
+                newsort[1] = not sort[1]
+                del self.SortList[i]
+
+
+        if self.SortLast:
+            self.SortList.insert(0, newsort)
+        else:
+            self.SortList.append(newsort)
+
+
+        self._update_sortbutton_text()
+        self._populate_component_list()
+
+

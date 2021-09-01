@@ -1,5 +1,5 @@
 from tkinter import * 
-import tkinter.messagebox
+from tkinter import messagebox
 import sqlite3
 from sqlite3 import Error
 from icecream import ic
@@ -56,8 +56,8 @@ class component_database:
     def delete_entry_in_table(self, table, key):
         """Generic function to delete an entry from a table"""
         c = self.conn.cursor()
-        sql = "DELETE FROM " + table + " WHERE Key = " + str(key)
-        c.execute(sql)
+        sql = "DELETE FROM " + table + " WHERE Key = ?" 
+        c.execute(sql, (key,))
         self.conn.commit()
 
 
@@ -123,11 +123,27 @@ class component_database:
         :param asc: sort by ascending (true) or descending(false)
         :return: list of rows
         """
+        return self.fetch_components_type_multisorted(table, [[sortcolumn, asc],["Footprint",True]])        
+
+    def fetch_components_type_multisorted(self, table, sortlist):
+        """ Fetch all components from a table, sorted by (optionally) multiple different columns
+        :param table: name of the table (ex: "Resistor") (Hardcoded names only)
+        :param sortlist: list of lists, like [[table, asc], [table, asc], [table, asc]] where table is the table to be sorted by, and asc a bool wether ascending or descending. Highest priority sort table listed first.
+        :return: list of rows
+        """
+        ic(sortlist)
         c = self.conn.cursor()
-        if asc == True:
-            sql = "SELECT * FROM "+str(table)+" ORDER BY "+str(sortcolumn)+" ASC, footprint ASC;"
-        else:
-            sql = "SELECT * FROM "+str(table)+" ORDER BY "+str(sortcolumn)+" DESC, footprint ASC;"
+        sql = "SELECT * FROM "+str(table)
+        if sortlist:
+            sql += " ORDER BY"
+            for sort in sortlist:
+                sql += " "+str(sort[0])
+                if sort[1]:
+                    sql += " ASC,"
+                else:
+                    sql += " DESC,"
+            sql = sql[:-1] + ";"
+        ic(sql)
         c.execute(sql)
         rows = c.fetchall()
         return rows
@@ -175,9 +191,10 @@ class component_database:
         ic(duplicates)
         for duplicate in duplicates:
             rows = self.fetch_component_by_value(table, "MfNr", duplicate[0])
-            ic(rows)
+            ic(rows)            
             ic(rows[0][0:-1])
             if rows[0][0:-1] == rows[1][0:-1]:
                 self.delete_entry_in_table(table, rows[1][-1])
             else:
-                pass
+                messagebox.showwarning("Database conflict", "Database conflict detected. Manufacturer number " + str(duplicate[0]) + " has multiple entries. Please resolve by deleting or editing one of them.")
+    
