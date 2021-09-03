@@ -130,8 +130,7 @@ class component_database:
         :param table: name of the table (ex: "Resistor") (Hardcoded names only)
         :param sortlist: list of lists, like [[table, asc], [table, asc], [table, asc]] where table is the table to be sorted by, and asc a bool wether ascending or descending. Highest priority sort table listed first.
         :return: list of rows
-        """
-        ic(sortlist)
+        """        
         c = self.conn.cursor()
         sql = "SELECT * FROM "+str(table)
         if sortlist:
@@ -142,11 +141,56 @@ class component_database:
                     sql += " ASC,"
                 else:
                     sql += " DESC,"
-            sql = sql[:-1] + ";"
-        ic(sql)
+            sql = sql[:-1] + ";"        
         c.execute(sql)
         rows = c.fetchall()
         return rows
+
+
+    def fetch_components_filter_multisorted(self, table, filterlist, sortlist):
+        """ Fetch all components from a table, sorted by (optionally) multiple different columns
+        :param table: name of the table (ex: "Resistor") (Hardcoded names only)
+        :param filterlist: list of list with filters formatted like: [[table, filter, operator],[table, filter, operator]] where table is the table to be filtered in, filter is what is to be filtered, and operator is how it is to be filtered ("=" or "!=")
+        :param sortlist: list of lists, like [[table, asc], [table, asc], [table, asc]] where table is the table to be sorted by, and asc a bool wether ascending or descending. Highest priority sort table listed first.
+        :return: list of rows
+        """        
+        c = self.conn.cursor()
+        sql = "SELECT * FROM "+str(table)
+
+        lasttable = ""
+        filters = []
+        if filterlist:
+            sql += " WHERE"
+            for filt in filterlist:
+                if lasttable != "":
+                    if filt[0] == lasttable:
+                        sql += " OR"
+                    else:
+                        sql += " AND"
+                lasttable = filt[0]
+                sql += " " +str(filt[0])+ " " +str(filt[2]) + " ?"
+                filters.append(filt[1])
+
+        if sortlist:
+            sql += " ORDER BY"
+            for sort in sortlist:
+                sql += " "+str(sort[0])
+                if sort[1]:
+                    sql += " ASC,"
+                else:
+                    sql += " DESC,"
+            sql = sql[:-1] + ";"
+        ic(sql)
+        c.execute(sql, filters)
+        rows = c.fetchall()
+        return rows
+
+    def list_all_entries_in_column_once(self, table, column):
+        c = self.conn.cursor()
+        sql = "SELECT DISTINCT " + str(column) + " FROM " +str(table)+ " ORDER BY "+str(column) +";"
+        c.execute(sql)
+        entries = c.fetchall()
+        return entries
 
     def fetch_component_by_value(self,table, valuetype, value):
         """Fetch all components in the table with matching value

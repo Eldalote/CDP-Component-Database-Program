@@ -36,6 +36,9 @@ class passive_components(component_category):
         self.component_item_list[-1].grid(row = framerow, column = 3)
         self.component_item_list.append(Button(self.list_frame, textvariable = self.SortText["Footprint"], width = 2, command = lambda: self._button_sort_click("Footprint")))
         self.component_item_list[-1].grid(row = framerow, column = 4)
+        self.component_item_list.append(Menubutton(self.list_frame, text = "Y", width = 1))
+        self.component_item_list[-1].grid(row = framerow, column = 5)
+        self.component_item_list[-1].menu = Menu(self.component_item_list[-1], tearoff =0)
         #Tolerance
         self.component_item_list.append(Label(self.list_frame, text = "Tolerance", width = 15))
         self.component_item_list[-1].grid(row = framerow, column = 6)

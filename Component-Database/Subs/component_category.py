@@ -22,6 +22,7 @@ class component_category(Subwindow):
         self.inspect_window = None
         self.edit_window = None       
         self.SortList = []
+        self.FilterList = []
         self.SortText = {}
         self.SortLast = True
 
